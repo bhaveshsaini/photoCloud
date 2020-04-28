@@ -6,11 +6,9 @@ const cloud = require('cloudinary').v2
 
 app.use(express.json())
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://fliks.herokuapp.com/");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+app.use(cors({
+    origin: 'https://fliks.herokuapp.com/'
+  }));
 
 cloud.config({
 	cloud_name: process.env.cloud_name,
