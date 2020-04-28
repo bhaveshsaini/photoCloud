@@ -4,8 +4,11 @@ const cors = require('cors')
 const multer = require('multer')
 const cloud = require('cloudinary').v2
 
-app.use(cors())
 app.use(express.json())
+
+const corsOptions = {
+    origin: 'https://fliks.herokuapp.com/',
+  }
 
 cloud.config({
 	cloud_name: process.env.cloud_name,
@@ -14,7 +17,7 @@ cloud.config({
 })
 
 
-app.get('/', async(req, res) => {
+app.get('/', cors(corsOptions), async(req, res) => {
 
     let resArray = []
 
@@ -51,7 +54,7 @@ const storage = multer.diskStorage({})
 
 const upload = multer({ storage: storage })
  
-app.post('/upload', upload.array('pic'), async (req, res) => {
+app.post('/upload', cors(corsOptions), upload.array('pic'), async (req, res) => {
     const file = req.files
     let success = false
 
@@ -73,7 +76,7 @@ app.post('/upload', upload.array('pic'), async (req, res) => {
     
 })
 
-app.delete('/deleteimage', async (req, res) => {
+app.delete('/deleteimage', cors(corsOptions), async (req, res) => {
 
     await cloud.uploader.destroy(req.header('public_id'))
     .then((res) => {
@@ -82,7 +85,7 @@ app.delete('/deleteimage', async (req, res) => {
     res.send()
 })
 
-app.delete('/deletevideo', async (req, res) => {
+app.delete('/deletevideo', cors(corsOptions), async (req, res) => {
     await cloud.uploader.destroy(req.header('public_id'), {
         resource_type: 'video'
     }).then((res) => {
