@@ -5,10 +5,7 @@ const multer = require('multer')
 const cloud = require('cloudinary').v2
 
 app.use(express.json())
-
-app.use(cors({
-    origin: 'https://fliks.herokuapp.com'
-  }));
+app.use(cors())
 
 cloud.config({
 	cloud_name: process.env.cloud_name,
