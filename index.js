@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const multer = require('multer')
 const cloud = require('cloudinary').v2
 
 app.use(express.json())
+app.use(cors())
 
 cloud.config({
 	cloud_name: process.env.cloud_name,
