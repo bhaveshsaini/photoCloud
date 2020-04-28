@@ -6,9 +6,11 @@ const cloud = require('cloudinary').v2
 
 app.use(express.json())
 
-const corsOptions = {
-    origin: 'https://fliks.herokuapp.com/',
-  }
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "https://fliks.herokuapp.com/");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 cloud.config({
 	cloud_name: process.env.cloud_name,
@@ -17,7 +19,7 @@ cloud.config({
 })
 
 
-app.get('/', cors(corsOptions), async(req, res) => {
+app.get('/', async(req, res) => {
 
     let resArray = []
 
@@ -54,7 +56,7 @@ const storage = multer.diskStorage({})
 
 const upload = multer({ storage: storage })
  
-app.post('/upload', cors(corsOptions), upload.array('pic'), async (req, res) => {
+app.post('/upload', upload.array('pic'), async (req, res) => {
     const file = req.files
     let success = false
 
@@ -76,7 +78,7 @@ app.post('/upload', cors(corsOptions), upload.array('pic'), async (req, res) => 
     
 })
 
-app.delete('/deleteimage', cors(corsOptions), async (req, res) => {
+app.delete('/deleteimage', async (req, res) => {
 
     await cloud.uploader.destroy(req.header('public_id'))
     .then((res) => {
@@ -85,7 +87,7 @@ app.delete('/deleteimage', cors(corsOptions), async (req, res) => {
     res.send()
 })
 
-app.delete('/deletevideo', cors(corsOptions), async (req, res) => {
+app.delete('/deletevideo', async (req, res) => {
     await cloud.uploader.destroy(req.header('public_id'), {
         resource_type: 'video'
     }).then((res) => {
